@@ -1,0 +1,125 @@
+<!-- Login Page (Green Theme) -->
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Login | Atheneum Academy</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1B4D3E",
+                        "secondary": "#707974",
+                        "surface": "#f8faf9",
+                        "surface-container": "#f2f4f3",
+                        "outline": "#c0c9c3",
+                        "primary-container": "#baeed9",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .bg-pattern {
+            background-color: #f8faf9;
+            background-image: radial-gradient(rgba(27, 77, 62, 0.08) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+
+<body class="bg-pattern text-[#003629] antialiased min-h-screen flex items-center justify-center p-4">
+    <div
+        class="w-full max-w-[1000px] bg-white rounded-3xl shadow-[0_8px_30px_rgba(0,54,41,0.04)] border border-outline/20 overflow-hidden flex flex-col md:flex-row min-h-[600px]">
+        <!-- Left Side: Branding / Img -->
+        <div class="w-full md:w-5/12 bg-primary text-white p-10 flex flex-col justify-between relative overflow-hidden">
+            <div class="absolute -bottom-24 -left-24 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute top-10 right-10 w-32 h-32 bg-primary-container/20 rounded-full blur-2xl"></div>
+            <div class="relative z-10">
+                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-primary mb-6 shadow-lg">
+                    <span class="material-symbols-outlined text-[28px]" data-icon="school">school</span>
+                </div>
+                <h1 class="text-3xl font-black tracking-tight mb-2">Atheneum OS</h1>
+                <p class="text-primary-container text-sm font-medium">Next-generation academic management.</p>
+            </div>
+            <div class="relative z-10 mt-12 md:mt-0">
+                <blockquote class="text-sm border-l-2 border-primary-container/50 pl-4 py-1 text-white/80 italic">
+                    "Empowering scholars and faculty through precision data and seamless coordination."
+                </blockquote>
+            </div>
+        </div>
+        <!-- Right Side: Login Form -->
+        <div class="w-full md:w-7/12 p-8 md:p-14 flex items-center justify-center">
+            <div class="w-full max-w-md">
+                <div class="mb-10 text-center md:text-left">
+                    <h2 class="text-2xl font-black text-[#003629] mb-2">Sign into portal</h2>
+                    <p class="text-secondary text-sm">Enter your institutional credentials to continue</p>
+                </div>
+                <form class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold text-secondary uppercase tracking-widest mb-2"
+                            for="uid">University ID</label>
+                        <div class="relative">
+                            <span
+                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-[20px]"
+                                data-icon="badge">badge</span>
+                            <input
+                                class="w-full bg-surface-container border border-outline/40 text-sm rounded-lg py-3 pl-10 pr-4 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[#003629]"
+                                id="uid" placeholder="e.g. 2024-88A" type="text" />
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-end mb-2">
+                            <label class="block text-xs font-bold text-secondary uppercase tracking-widest"
+                                for="pwd">Passphrase</label>
+                            <a class="text-xs font-bold text-primary hover:underline" href="#">Forgot?</a>
+                        </div>
+                        <div class="relative">
+                            <span
+                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-[20px]"
+                                data-icon="lock">lock</span>
+                            <input
+                                class="w-full bg-surface-container border border-outline/40 text-sm rounded-lg py-3 pl-10 pr-4 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[#003629]"
+                                id="pwd" placeholder="••••••••" type="password" />
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 pt-2">
+                        <input class="rounded border-outline/40 text-primary focus:ring-primary h-4 w-4" id="remember"
+                            type="checkbox" />
+                        <label class="text-sm font-medium text-secondary" for="remember">Keep me signed in</label>
+                    </div>
+                    <button
+                        class="w-full py-3.5 mt-4 bg-primary text-white rounded-lg font-bold shadow-sm hover:bg-primary/90 hover:shadow-md active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                        type="button">
+                        <span>Authenticate</span>
+                        <span class="material-symbols-outlined text-[18px]"
+                            data-icon="arrow_forward">arrow_forward</span>
+                    </button>
+                </form>
+                <div class="mt-8 pt-8 border-t border-outline/20 text-center">
+                    <p class="text-xs text-secondary">Require technical assistance? <br class="sm:hidden" /> <a
+                            class="font-bold text-primary hover:underline" href="#">Contact IT Support</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

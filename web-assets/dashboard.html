@@ -1,0 +1,314 @@
+<!-- Dashboard Page (Green Theme) -->
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Dashboard | Atheneum Academy</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://fastly.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1B4D3E", // Forest Green Core
+                        "secondary": "#707974",
+                        "surface": "#f8faf9",
+                        "surface-container": "#f2f4f3",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#003629",
+                        "on-surface-variant": "#404945",
+                        "outline": "#c0c9c3",
+                        "primary-container": "#baeed9",
+                        "on-primary-container": "#002118",
+                        "tertiary": "#bd1418", // Keep small hint of red for alerts
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .bento-card {
+            background-color: white;
+            border: 1px solid rgba(192, 201, 195, 0.4);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 54, 41, 0.05);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c0c9c3;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #707974;
+        }
+    </style>
+</head>
+
+<body class="bg-surface text-on-surface antialiased flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside
+        class="hidden lg:flex flex-col w-[260px] bg-[#f2f4f3] border-r border-[#c0c9c3]/30 h-full flex-shrink-0 z-20">
+        <div class="h-20 flex items-center px-6 border-b border-outline/20">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-sm">
+                    <span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+                </div>
+                <div>
+                    <h1 class="text-[17px] font-black tracking-tight leading-none text-[#003629]">Atheneum</h1>
+                    <span class="text-[9px] font-bold text-secondary uppercase tracking-[0.2em]">Student Portal</span>
+                </div>
+            </div>
+        </div>
+        <!-- Navigation Links -->
+        <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-1.5">
+            <p class="px-3 text-[10px] font-bold text-secondary uppercase tracking-widest mb-3">Main Overview</p>
+            <a class="flex items-center gap-3 px-3 py-2.5 bg-white text-primary rounded-lg shadow-sm border border-primary-container/50 font-bold text-sm"
+                href="#">
+                <span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span> Dashboard
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-secondary hover:text-primary hover:bg-white rounded-lg transition-colors font-medium text-sm"
+                href="#">
+                <span class="material-symbols-outlined text-[20px]" data-icon="fact_check">fact_check</span> Attendance
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-secondary hover:text-primary hover:bg-white rounded-lg transition-colors font-medium text-sm"
+                href="#">
+                <span class="material-symbols-outlined text-[20px]" data-icon="grade">grade</span> Term Marks
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-secondary hover:text-primary hover:bg-white rounded-lg transition-colors font-medium text-sm"
+                href="#">
+                <span class="material-symbols-outlined text-[20px]" data-icon="local_activity">local_activity</span>
+                Activities
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-secondary hover:text-primary hover:bg-white rounded-lg transition-colors font-medium text-sm"
+                href="#">
+                <span class="material-symbols-outlined text-[20px]" data-icon="analytics">analytics</span> Analytics
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-secondary hover:text-primary hover:bg-white rounded-lg transition-colors font-medium text-sm"
+                href="#">
+                <span class="material-symbols-outlined text-[20px]" data-icon="description">description</span> Reports
+            </a>
+        </nav>
+    </aside>
+    <main class="flex-1 flex flex-col h-full overflow-hidden w-full bg-surface pt-16 lg:pt-0 relative">
+        <header
+            class="lg:hidden fixed top-0 w-full z-40 h-16 bg-white/90 backdrop-blur-md flex justify-between items-center px-4 border-b border-outline/20">
+            <span class="text-base font-black text-primary">Atheneum</span>
+            <button class="p-2 text-secondary"><span class="material-symbols-outlined"
+                    data-icon="menu">menu</span></button>
+        </header>
+        <!-- Top Bar Desktop -->
+        <div
+            class="hidden lg:flex h-20 items-center justify-between px-8 border-b border-outline/20 bg-surface shrink-0">
+            <h2 class="text-2xl font-black text-on-surface">Welcome back, Elias!</h2>
+            <button
+                class="flex items-center gap-3 p-1.5 pr-3 rounded-full border border-outline/40 hover:bg-surface-container transition-colors">
+                <img alt="User" class="w-8 h-8 rounded-full border border-outline/50 bg-white"
+                    src="https://api.iconify.design/material-symbols:person.svg?color=%23707974" />
+                <span class="text-sm font-bold text-on-surface">Elias Thorne</span>
+            </button>
+        </div>
+        <!-- Dashboard Content -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 pb-32 lg:pb-8 w-full">
+            <div class="max-w-6xl mx-auto space-y-6">
+                <!-- Hero Summary Card -->
+                <div
+                    class="bento-card p-6 bg-primary text-white border-none flex flex-col md:flex-row justify-between items-center gap-6 overflow-hidden relative">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+                    <div class="relative z-10 w-full md:w-auto">
+                        <span
+                            class="px-2.5 py-1 bg-white/20 text-white text-[10px] font-bold uppercase tracking-widest rounded mb-3 inline-block">Current
+                            Status</span>
+                        <h3 class="text-3xl font-black mb-1">Excellent Standing</h3>
+                        <p class="text-primary-container text-sm font-medium">You are in the top 10% of your cohort.</p>
+                    </div>
+                    <div class="flex gap-4 relative z-10 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+                        <div class="bg-white/10 p-4 rounded-xl min-w-[120px]">
+                            <p class="text-[10px] text-primary-container uppercase tracking-widest font-bold mb-1">Term
+                                GPA</p>
+                            <p class="text-2xl font-black">3.84</p>
+                        </div>
+                        <div class="bg-white/10 p-4 rounded-xl min-w-[120px]">
+                            <p class="text-[10px] text-primary-container uppercase tracking-widest font-bold mb-1">
+                                Attendance</p>
+                            <p class="text-2xl font-black">93%</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Bento Grid Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 w-full">
+                    <!-- Recent Marks (Spans 8 cols) -->
+                    <div class="bento-card col-span-1 md:col-span-8 p-6 flex flex-col w-full min-w-0">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold text-on-surface flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-[20px]"
+                                    data-icon="timeline">timeline</span> GPA Progression
+                            </h3>
+                            <button
+                                class="text-[10px] font-bold text-secondary uppercase hover:text-primary">Details</button>
+                        </div>
+                        <div class="w-full h-[220px]" id="gpaChart"></div>
+                    </div>
+                    <!-- Next Assignment / Alert (Spans 4 cols) -->
+                    <div class="bento-card col-span-1 md:col-span-4 p-6 flex flex-col bg-[#fffbf0] border-[#EAB308]/30">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="material-symbols-outlined text-[#EAB308]"
+                                data-icon="notification_important">notification_important</span>
+                            <div>
+                                <h3 class="font-bold text-on-surface">Upcoming Deadline</h3>
+                                <p class="text-xs text-secondary mt-0.5">Due in 2 days</p>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 border border-[#EAB308]/20 mt-auto">
+                            <h4 class="text-sm font-bold text-on-surface mb-1">OS Concept Paper</h4>
+                            <p class="text-xs text-secondary mb-3">CS-304 • Prof. Davis</p>
+                            <button
+                                class="w-full py-2 bg-primary text-white text-xs font-bold rounded-lg shadow-sm">Submit
+                                Work</button>
+                        </div>
+                    </div>
+                    <!-- Today's Schedule (Spans 4 cols) -->
+                    <div class="bento-card col-span-1 md:col-span-4 p-6">
+                        <h3 class="font-bold text-on-surface mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-[20px]"
+                                data-icon="calendar_today">calendar_today</span> Today's Schedule
+                        </h3>
+                        <div class="space-y-4">
+                            <!-- Class item -->
+                            <div class="flex gap-3 relative pl-3">
+                                <div class="absolute left-0 top-1 bottom-1 w-1 bg-primary rounded-full"></div>
+                                <div>
+                                    <p class="text-xs font-bold text-primary mb-0.5">09:00 - 10:30 AM</p>
+                                    <p class="text-sm font-bold text-on-surface">Data Structures</p>
+                                    <p class="text-[10px] text-secondary">Room 402 • Lab</p>
+                                </div>
+                            </div>
+                            <!-- Class item -->
+                            <div class="flex gap-3 relative pl-3 opacity-60">
+                                <div class="absolute left-0 top-1 bottom-1 w-1 bg-outline rounded-full"></div>
+                                <div>
+                                    <p class="text-xs font-bold text-secondary mb-0.5">11:00 - 12:30 PM</p>
+                                    <p class="text-sm font-bold text-on-surface">Linear Algebra</p>
+                                    <p class="text-[10px] text-secondary">Lecture Hall B</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Quick Actions (Spans 8 cols) -->
+                    <div class="bento-card col-span-1 md:col-span-8 p-6">
+                        <h3 class="font-bold text-on-surface mb-4">Quick Shortcuts</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <button
+                                class="flex flex-col items-center justify-center p-4 rounded-xl bg-surface-container hover:bg-primary-container/30 border border-transparent hover:border-primary/20 transition-all gap-2 text-on-surface">
+                                <span class="material-symbols-outlined text-primary"
+                                    data-icon="event_note">event_note</span>
+                                <span class="text-xs font-bold">Log Absence</span>
+                            </button>
+                            <button
+                                class="flex flex-col items-center justify-center p-4 rounded-xl bg-surface-container hover:bg-primary-container/30 border border-transparent hover:border-primary/20 transition-all gap-2 text-on-surface">
+                                <span class="material-symbols-outlined text-primary"
+                                    data-icon="menu_book">menu_book</span>
+                                <span class="text-xs font-bold">Library RSVP</span>
+                            </button>
+                            <button
+                                class="flex flex-col items-center justify-center p-4 rounded-xl bg-surface-container hover:bg-primary-container/30 border border-transparent hover:border-primary/20 transition-all gap-2 text-on-surface">
+                                <span class="material-symbols-outlined text-primary" data-icon="forum">forum</span>
+                                <span class="text-xs font-bold">Advisor Chat</span>
+                            </button>
+                            <button
+                                class="flex flex-col items-center justify-center p-4 rounded-xl bg-surface-container hover:bg-primary-container/30 border border-transparent hover:border-primary/20 transition-all gap-2 text-on-surface">
+                                <span class="material-symbols-outlined text-primary"
+                                    data-icon="account_balance_wallet">account_balance_wallet</span>
+                                <span class="text-xs font-bold">Tuition Fees</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <nav
+        class="lg:hidden fixed bottom-0 w-full h-[64px] bg-white border-t border-outline/20 flex justify-around items-center px-2 pb-safe z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.03)]">
+        <button class="flex flex-col items-center gap-1 text-primary text-[10px] font-bold"><span
+                class="material-symbols-outlined" data-icon="dashboard">dashboard</span> Dash</button>
+        <button class="flex flex-col items-center gap-1 text-secondary text-[10px] font-bold"><span
+                class="material-symbols-outlined" data-icon="fact_check">fact_check</span> Attend</button>
+        <button class="flex flex-col items-center gap-1 text-secondary text-[10px] font-bold"><span
+                class="material-symbols-outlined" data-icon="grade">grade</span> Marks</button>
+        <button class="flex flex-col items-center gap-1 text-secondary text-[10px] font-bold"><span
+                class="material-symbols-outlined" data-icon="menu">menu</span> More</button>
+    </nav>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chartDom = document.getElementById('gpaChart');
+            if (chartDom && typeof echarts !== 'undefined') {
+                const myChart = echarts.init(chartDom);
+                myChart.setOption({
+                    grid: { left: '2%', right: '2%', bottom: '5%', top: '10%', containLabel: true },
+                    tooltip: { trigger: 'axis' },
+                    xAxis: {
+                        type: 'category',
+                        data: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Now'],
+                        axisLine: { show: false },
+                        axisTick: { show: false },
+                        axisLabel: { color: '#707974', fontFamily: 'Inter', fontSize: 10 }
+                    },
+                    yAxis: {
+                        type: 'value', min: 3.0, max: 4.0,
+                        splitLine: { lineStyle: { color: '#f2f4f3', type: 'dashed' } },
+                        axisLabel: { color: '#707974', fontFamily: 'Inter', fontSize: 10 }
+                    },
+                    series: [{
+                        data: [3.4, 3.6, 3.5, 3.75, 3.84],
+                        type: 'line',
+                        smooth: true,
+                        symbolSize: 8,
+                        itemStyle: { color: '#1B4D3E' },
+                        areaStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: 'rgba(27,77,62,0.2)' },
+                                { offset: 1, color: 'rgba(27,77,62,0)' }
+                            ])
+                        },
+                        lineStyle: { width: 3 }
+                    }]
+                });
+                window.addEventListener('resize', () => myChart.resize());
+            }
+        });
+    </script>
+</body>
+
+</html>

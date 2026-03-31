@@ -1,0 +1,373 @@
+<!-- Attendance Page (Green Theme) -->
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Attendance Registry | Atheneum Academy</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://fastly.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1B4D3E", // Forest Green Core
+                        "secondary": "#707974",
+                        "surface": "#f8faf9",
+                        "surface-container": "#f2f4f3",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#003629",
+                        "on-surface-variant": "#404945",
+                        "outline": "#c0c9c3",
+                        "primary-container": "#baeed9",
+                        "on-primary-container": "#002118",
+                        "tertiary": "#bd1418", // Keep small hint of red for alerts
+                        "error": "#a8364b",
+                        "present": "#1B4D3E",
+                        "absent": "#a8364b",
+                        "late": "#d97706"
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"],
+                        "mono": ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .bento-card {
+            background-color: white;
+            border: 1px solid rgba(192, 201, 195, 0.4);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .bento-card:hover {
+            box-shadow: 0 4px 12px -2px rgba(0, 54, 41, 0.08);
+        }
+
+        /* Calendar Specific Styles */
+        .cal-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cal-day.status-present {
+            background-color: rgba(27, 77, 62, 0.1);
+            color: #1B4D3E;
+            font-weight: 700;
+            border: 1px solid rgba(27, 77, 62, 0.2);
+        }
+
+        .cal-day.status-absent {
+            background-color: rgba(168, 54, 75, 0.1);
+            color: #a8364b;
+            font-weight: 700;
+            border: 1px solid rgba(168, 54, 75, 0.2);
+        }
+
+        .cal-day.status-late {
+            background-color: rgba(217, 119, 6, 0.1);
+            color: #d97706;
+            font-weight: 700;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+
+        .cal-day.empty {
+            visibility: hidden;
+        }
+
+        .cal-day:hover:not(.empty) {
+            transform: scale(1.05);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c0c9c3;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #707974;
+        }
+    </style>
+</head>
+
+<body class="bg-surface text-on-surface antialiased overflow-hidden flex h-screen">
+    <!-- Sidebar Navigation -->
+    <aside class="hidden lg:flex flex-col w-64 bg-[#f2f4f3] border-r border-[#c0c9c3]/30 h-full flex-shrink-0">
+        <div class="p-6">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded bg-primary flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined text-[20px]" data-icon="school">school</span>
+                </div>
+                <div>
+                    <h1 class="text-base font-black text-[#003629] leading-tight">Atheneum</h1>
+                    <p class="text-[9px] text-secondary font-bold uppercase tracking-widest">Scholar Portal</p>
+                </div>
+            </div>
+            <!-- Nav Links -->
+            <nav class="space-y-1.5">
+                <a class="flex items-center gap-3 px-3 py-2.5 text-secondary hover:text-primary hover:bg-white rounded-md transition-all text-sm font-medium"
+                    href="#">
+                    <span class="material-symbols-outlined text-[18px]" data-icon="dashboard">dashboard</span> Dashboard
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2.5 bg-white text-primary shadow-sm border border-outline/20 rounded-md text-sm font-bold"
+                    href="#">
+                    <span class="material-symbols-outlined text-[18px]" data-icon="fact_check">fact_check</span>
+                    Attendance
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2.5 text-secondary hover:text-primary hover:bg-white rounded-md transition-all text-sm font-medium"
+                    href="#">
+                    <span class="material-symbols-outlined text-[18px]" data-icon="assignment">assignment</span>
+                    Assignments
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2.5 text-secondary hover:text-primary hover:bg-white rounded-md transition-all text-sm font-medium"
+                    href="#">
+                    <span class="material-symbols-outlined text-[18px]" data-icon="grade">grade</span> Term Marks
+                </a>
+            </nav>
+        </div>
+        <div class="mt-auto p-4 m-4 bg-white rounded-lg border border-outline/30 flex items-center gap-3">
+            <img alt="User" class="w-8 h-8 rounded-full bg-surface-container"
+                src="https://api.iconify.design/material-symbols:person.svg?color=%23707974" />
+            <div class="overflow-hidden">
+                <p class="text-xs font-bold truncate">Elias Thorne</p>
+                <p class="text-[10px] text-secondary truncate">ID: 2024-88A</p>
+            </div>
+        </div>
+    </aside>
+    <!-- Mobile Header -->
+    <header
+        class="lg:hidden fixed top-0 w-full z-50 h-14 bg-white/90 backdrop-blur border-b border-outline/20 flex justify-between items-center px-4">
+        <span class="font-black text-primary text-lg">Atheneum</span>
+        <button class="text-secondary"><span class="material-symbols-outlined" data-icon="menu">menu</span></button>
+    </header>
+    <!-- Main Content -->
+    <main class="flex-1 shrink-0 overflow-y-auto pt-14 lg:pt-0 w-full bg-surface">
+        <div class="max-w-5xl mx-auto p-4 md:p-8 pb-24 lg:pb-8 w-full">
+            <!-- Page Header -->
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="text-2xl font-black text-on-surface">Attendance Record</h2>
+                    <p class="text-sm text-secondary font-medium">Fall Semester - Computer Science</p>
+                </div>
+                <div class="flex gap-2">
+                    <select
+                        class="bg-white border border-outline/30 text-sm rounded py-1.5 pl-3 pr-8 focus:ring-primary shadow-sm text-on-surface">
+                        <option>November 2024</option>
+                        <option>October 2024</option>
+                    </select>
+                    <button
+                        class="px-3 border border-outline/30 bg-white rounded text-secondary hover:text-primary shadow-sm transition">
+                        <span class="material-symbols-outlined text-[18px] top-[2px] relative"
+                            data-icon="download">download</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Top Stats Row -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="bento-card p-5 flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 rounded-full bg-primary-container/30 flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-secondary uppercase tracking-widest">Total Present</p>
+                        <div class="flex items-end gap-2">
+                            <span class="text-2xl font-black text-on-surface leading-none">42</span>
+                            <span class="text-xs font-bold text-primary mb-0.5">/ 45 days</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bento-card p-5 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-[#fef2f2] flex items-center justify-center text-error">
+                        <span class="material-symbols-outlined" data-icon="cancel">cancel</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-secondary uppercase tracking-widest">Total Absent</p>
+                        <div class="flex items-end gap-2">
+                            <span class="text-2xl font-black text-on-surface leading-none">2</span>
+                            <span class="text-xs font-medium text-secondary mb-0.5">days</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bento-card p-5 flex items-center justify-between bg-primary text-white border-none">
+                    <div>
+                        <p class="text-[10px] font-bold text-primary-container uppercase tracking-widest mb-1">Current
+                            Rate</p>
+                        <span class="text-3xl font-black tracking-tight">93.3%</span>
+                        <p class="text-xs text-primary-container mt-1 font-medium">Above 85% requirement</p>
+                    </div>
+                    <div class="w-16 h-16" id="miniDonut"></div>
+                </div>
+            </div>
+            <!-- Calendar & Subjects Split -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Calendar Widget -->
+                <div class="bento-card p-6 lg:col-span-2">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-sm uppercase tracking-wider text-on-surface">November 2024</h3>
+                        <div class="flex gap-3 text-xs font-medium">
+                            <span class="flex items-center gap-1">
+                                <div class="w-2 h-2 rounded bg-present"></div> Present
+                            </span>
+                            <span class="flex items-center gap-1">
+                                <div class="w-2 h-2 rounded bg-absent"></div> Absent
+                            </span>
+                        </div>
+                    </div>
+                    <!-- CSS Grid Calendar layout -->
+                    <div class="grid grid-cols-7 gap-2 mb-2 text-center text-xs font-bold text-secondary">
+                        <div>SUN</div>
+                        <div>MON</div>
+                        <div>TUE</div>
+                        <div>WED</div>
+                        <div>THU</div>
+                        <div>FRI</div>
+                        <div>SAT</div>
+                    </div>
+                    <div class="grid grid-cols-7 gap-2" id="calendarGrid">
+                        <!-- Generated via JS below -->
+                    </div>
+                </div>
+                <!-- Subject Breakdown -->
+                <div class="bento-card p-6 flex flex-col">
+                    <h3 class="font-bold text-sm uppercase tracking-wider text-on-surface mb-6">By Subject</h3>
+                    <div class="space-y-5 flex-1" id="subjectBarChart">
+                        <!-- Subject 1 -->
+                        <div>
+                            <div class="flex justify-between text-xs mb-1.5">
+                                <span class="font-bold text-on-surface">Data Structures</span>
+                                <span class="font-bold text-primary">98%</span>
+                            </div>
+                            <div class="w-full bg-surface-container rounded-full h-2 overflow-hidden">
+                                <div class="bg-primary h-2 rounded-full" style="width: 98%"></div>
+                            </div>
+                        </div>
+                        <!-- Subject 2 -->
+                        <div>
+                            <div class="flex justify-between text-xs mb-1.5">
+                                <span class="font-bold text-on-surface">Linear Algebra</span>
+                                <span class="font-bold text-[#d97706]">82%</span>
+                            </div>
+                            <div class="w-full bg-surface-container rounded-full h-2 overflow-hidden">
+                                <div class="bg-[#f59e0b] h-2 rounded-full" style="width: 82%"></div>
+                            </div>
+                        </div>
+                        <!-- Subject 3 -->
+                        <div>
+                            <div class="flex justify-between text-xs mb-1.5">
+                                <span class="font-bold text-on-surface">Sys Architecture</span>
+                                <span class="font-bold text-primary">100%</span>
+                            </div>
+                            <div class="w-full bg-surface-container rounded-full h-2 overflow-hidden">
+                                <div class="bg-primary h-2 rounded-full" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <!-- Subject 4 -->
+                        <div>
+                            <div class="flex justify-between text-xs mb-1.5">
+                                <span class="font-bold text-on-surface">Ethics in Tech</span>
+                                <span class="font-bold text-primary">90%</span>
+                            </div>
+                            <div class="w-full bg-surface-container rounded-full h-2 overflow-hidden">
+                                <div class="bg-primary h-2 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-outline/20">
+                        <p class="text-xs text-secondary text-center leading-relaxed">Warning threshold is 85%. Reach
+                            out to advisor if approaching limit.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Mobile Nav Footer -->
+    <nav
+        class="lg:hidden fixed bottom-0 w-full h-[64px] bg-white border-t border-outline/20 flex justify-around items-center px-2 pb-safe z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.03)]">
+        <button class="flex flex-col items-center gap-1 text-secondary text-[10px] font-bold"><span
+                class="material-symbols-outlined" data-icon="dashboard">dashboard</span> Dash</button>
+        <button class="flex flex-col items-center gap-1 text-primary text-[10px] font-bold"><span
+                class="material-symbols-outlined" data-icon="fact_check">fact_check</span> Attend</button>
+        <button class="flex flex-col items-center gap-1 text-secondary text-[10px] font-bold"><span
+                class="material-symbols-outlined" data-icon="assignment">assignment</span> Work</button>
+    </nav>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Generate Calendar Grid mock data for November 2024
+            // Starts on Friday
+            const calGrid = document.getElementById('calendarGrid');
+            let html = '';
+            // 5 Empty days (Sun, Mon, Tue, Wed, Thu)
+            for (let i = 0; i < 5; i++) { html += `<div class="cal-day empty"></div>`; }
+
+            // Days 1 to 30
+            for (let i = 1; i <= 30; i++) {
+                let statusClass = 'status-present'; // Default
+                if (i === 12 || i === 24) statusClass = 'status-absent';
+                if (i === 6) statusClass = 'status-late';
+                // Weekends logic (Sat=6, Sun=0)
+                let dateObj = new Date(2024, 10, i);
+                let dayOfWeek = dateObj.getDay();
+                if (dayOfWeek === 0 || dayOfWeek === 6) {
+                    statusClass = 'bg-surface-container/50 text-secondary'; // weekend styling
+                }
+
+                html += `<div class="cal-day ${statusClass}">${i}</div>`;
+            }
+            calGrid.innerHTML = html;
+
+            // Simple Echart mini donut
+            const miniDom = document.getElementById('miniDonut');
+            if (miniDom && typeof echarts !== 'undefined') {
+                const miniChart = echarts.init(miniDom);
+                miniChart.setOption({
+                    series: [{
+                        type: 'pie',
+                        radius: ['60%', '100%'],
+                        avoidLabelOverlap: false,
+                        label: { show: false },
+                        data: [
+                            { value: 93.3, itemStyle: { color: '#ffffff' } },
+                            { value: 6.7, itemStyle: { color: 'rgba(255,255,255,0.2)' } }
+                        ]
+                    }]
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,447 @@
+<!-- Analytics Page (Green Theme) -->
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Analytics &amp; Objectives | Atheneum</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- ECharts for real-chart capabilities -->
+    <script src="https://fastly.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1B4D3E", // Forest Green Core
+                        "secondary": "#707974",
+                        "surface": "#f8faf9",
+                        "surface-container": "#f2f4f3",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#003629",
+                        "on-surface-variant": "#404945",
+                        "outline": "#c0c9c3",
+                        "primary-container": "#baeed9",
+                        "on-primary-container": "#002118", // Darker text for readability on light green
+                        "tertiary": "#bd1418",
+                        "error": "#a8364b",
+                        "chart-1": "#1B4D3E",
+                        "chart-2": "#4CAF50",
+                        "chart-3": "#81C784",
+                        "chart-4": "#C8E6C9"
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"],
+                        "mono": ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .bento-card {
+            background-color: white;
+            border: 1px solid rgba(192, 201, 195, 0.4);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 54, 41, 0.1), 0 4px 6px -2px rgba(0, 54, 41, 0.05);
+        }
+
+        /* Custom Scrollbar for better UI */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c0c9c3;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #707974;
+        }
+    </style>
+</head>
+
+<body class="bg-surface text-on-surface antialiased overflow-x-hidden">
+    <!-- Desktop Sidebar Navigation -->
+    <aside
+        class="hidden lg:flex flex-col fixed left-0 top-0 h-full w-[280px] py-8 bg-[#f2f4f3] z-40 border-r border-[#c0c9c3]/30">
+        <div class="px-8 mb-12">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg">
+                    <span class="material-symbols-outlined text-xl" data-icon="school">school</span>
+                </div>
+                <div>
+                    <h1
+                        class="text-xl font-black text-[#003629] tracking-tight leading-none bg-gradient-to-r from-primary to-[#4CAF50] bg-clip-text text-transparent">
+                        Atheneum OS</h1>
+                    <p class="text-[10px] text-secondary font-bold uppercase tracking-widest mt-0.5">Metrics Division
+                    </p>
+                </div>
+            </div>
+        </div>
+        <nav class="flex-1 overflow-y-auto px-4 space-y-1">
+            <p class="px-4 text-[10px] font-black text-secondary uppercase tracking-[0.2em] mb-2 mt-4">Core Modules</p>
+            <a class="flex items-center gap-3 px-4 py-3 text-secondary hover:text-primary hover:bg-white rounded-xl transition-all font-medium text-sm"
+                href="#">
+                <span class="material-symbols-outlined text-[20px]" data-icon="space_dashboard">space_dashboard</span>
+                Overview
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 text-secondary hover:text-primary hover:bg-white rounded-xl transition-all font-medium text-sm"
+                href="#">
+                <span class="material-symbols-outlined text-[20px]" data-icon="rule_folder">rule_folder</span>
+                Attendance Log
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 text-secondary hover:text-primary hover:bg-white rounded-xl transition-all font-medium text-sm"
+                href="#">
+                <span class="material-symbols-outlined text-[20px]" data-icon="bar_chart">bar_chart</span>
+                Academic Roster
+            </a>
+            <p class="px-4 text-[10px] font-black text-secondary uppercase tracking-[0.2em] mb-2 mt-6">Intelligence</p>
+            <a class="flex items-center gap-3 px-4 py-3 bg-white text-primary rounded-xl shadow-sm border border-primary-container/50 font-bold text-sm"
+                href="#">
+                <span class="material-symbols-outlined text-[20px]" data-icon="query_stats">query_stats</span>
+                Deep Analytics
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 text-secondary hover:text-primary hover:bg-white rounded-xl transition-all font-medium text-sm"
+                href="#">
+                <span class="material-symbols-outlined text-[20px]" data-icon="file_present">file_present</span>
+                Archival Reports
+            </a>
+        </nav>
+        <div class="px-6 mt-auto">
+            <div class="p-4 bg-white rounded-2xl border border-[#c0c9c3]/50 flex items-center gap-3">
+                <img alt="Dr. Vane" class="w-10 h-10 rounded-full object-cover border border-outline"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZHNr6OPSVSJx42atzr3TYgf3-wkCHy4sQeG5x6eMYNIr62q75WMcX6jfnNx5jcTwR56TLvG9WPACODXCbA2yH7a1l5RN95zcbEaTktHuh-_53ON4YCqa68CBEaTNWLiSfE23GgjeXmpaxcA27rrje0GLgpibK-2NyjKGA6ObAtbd5w5IY9kq0e1jUo-ySl-lyca2AUV2oxqpYKRoRDooz7-3TfKu9u1uZKS_9ZS0UYlf5FwrCjsbJdUxvCfnuV2oLRN9ATCxBx7Me" />
+                <div class="overflow-hidden">
+                    <p class="text-sm font-bold text-on-surface truncate leading-tight">Dr. Julian Vane</p>
+                    <p class="text-[11px] text-secondary font-medium truncate">Dean of Data</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+    <!-- Mobile Top Header -->
+    <header
+        class="lg:hidden fixed top-0 w-full z-50 h-16 bg-white/90 backdrop-blur-md flex justify-between items-center px-4 border-b border-outline/30">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white">
+                <span class="material-symbols-outlined text-sm" data-icon="school">school</span>
+            </div>
+            <span class="text-lg font-black tracking-tight text-on-surface">Analytics</span>
+        </div>
+        <button class="p-2 text-secondary active:text-primary transition-colors">
+            <span class="material-symbols-outlined" data-icon="menu">menu</span>
+        </button>
+    </header>
+    <!-- Main Application Area -->
+    <main class="pt-20 lg:pt-8 pb-32 lg:pb-12 lg:ml-[280px] px-4 md:px-8 xl:px-12 w-full min-h-screen">
+        <div class="max-w-[1400px] mx-auto w-full">
+            <!-- Header Section -->
+            <header class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 w-full">
+                <div>
+                    <h2 class="text-3xl lg:text-4xl font-black tracking-tight text-on-surface mb-2">Institutional
+                        Analytics</h2>
+                    <p class="text-secondary text-sm font-medium flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-[#4CAF50] animate-pulse"></span>
+                        Live Matrix: Fall Semester '24 Cohort
+                    </p>
+                </div>
+                <div class="flex gap-2">
+                    <select
+                        class="bg-white border border-outline/40 text-on-surface text-sm rounded-lg py-2 pl-4 pr-10 focus:ring-2 focus:ring-primary/20 focus:border-primary font-medium cursor-pointer shadow-sm">
+                        <option>Global View</option>
+                        <option>Department of Sciences</option>
+                        <option>Department of Arts</option>
+                    </select>
+                    <button
+                        class="bg-primary text-white p-2 w-10 text-center rounded-lg hover:bg-primary/90 transition shadow-sm flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[20px]" data-icon="download">download</span>
+                    </button>
+                </div>
+            </header>
+            <!-- Key Metric Cards (KPIs) -->
+            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 w-full">
+                <!-- KPI 1 -->
+                <div class="bento-card p-6 relative overflow-hidden group">
+                    <div
+                        class="absolute right-0 top-0 w-24 h-24 bg-primary-container/30 rounded-bl-full -z-10 group-hover:bg-primary-container/50 transition-colors duration-500">
+                    </div>
+                    <div class="flex justify-between items-start mb-4">
+                        <p class="text-xs font-bold text-secondary uppercase tracking-widest">Enrollment Retention</p>
+                        <span class="material-symbols-outlined text-primary bg-primary-container/40 p-1.5 rounded-md"
+                            data-icon="groups">groups</span>
+                    </div>
+                    <h3 class="text-3xl font-black text-on-surface mb-1">94.2%</h3>
+                    <div
+                        class="flex items-center gap-1.5 text-xs font-bold text-green-600 bg-green-50 w-fit px-2 py-0.5 rounded">
+                        <span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+                        <span>+1.2% YOY</span>
+                    </div>
+                </div>
+                <!-- KPI 2 -->
+                <div class="bento-card p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <p class="text-xs font-bold text-secondary uppercase tracking-widest">GPA Mean (Current)</p>
+                        <span class="material-symbols-outlined text-primary bg-primary-container/40 p-1.5 rounded-md"
+                            data-icon="functions">functions</span>
+                    </div>
+                    <h3 class="text-3xl font-black text-on-surface mb-1">3.41</h3>
+                    <div
+                        class="flex items-center gap-1.5 text-xs font-bold text-green-600 bg-green-50 w-fit px-2 py-0.5 rounded">
+                        <span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+                        <span>+0.04 Term</span>
+                    </div>
+                </div>
+                <!-- KPI 3 -->
+                <div class="bento-card p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <p class="text-xs font-bold text-secondary uppercase tracking-widest">Faculty Research Hrs</p>
+                        <span class="material-symbols-outlined text-primary bg-primary-container/40 p-1.5 rounded-md"
+                            data-icon="science">science</span>
+                    </div>
+                    <h3 class="text-3xl font-black text-on-surface mb-1">12,450</h3>
+                    <div
+                        class="flex items-center gap-1.5 text-xs font-bold text-red-600 bg-red-50 w-fit px-2 py-0.5 rounded">
+                        <span class="material-symbols-outlined text-[14px]"
+                            data-icon="trending_down">trending_down</span>
+                        <span>-5% Target</span>
+                    </div>
+                </div>
+                <!-- KPI 4 -->
+                <div class="bento-card p-6 bg-primary text-white border-none shadow-md">
+                    <div class="flex justify-between items-start mb-4">
+                        <p class="text-xs font-bold text-primary-container uppercase tracking-widest">Facility
+                            Utilization</p>
+                        <span class="material-symbols-outlined text-primary bg-white p-1.5 rounded-md"
+                            data-icon="meeting_room">meeting_room</span>
+                    </div>
+                    <h3 class="text-3xl font-black mb-1">88.5%</h3>
+                    <p class="text-xs text-primary-container font-medium mt-1">Nearing peak capacity threshold</p>
+                </div>
+            </section>
+            <!-- Complex Charts Area - Bento Grid Layout -->
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
+                <!-- Primary Large Chart (Spans 2 columns on desktop) -->
+                <div class="bento-card col-span-1 lg:col-span-2 p-6 flex flex-col w-full min-w-0">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="font-bold text-on-surface">Academic Performance Trajectory</h3>
+                            <p class="text-xs text-secondary mt-1">Cross-departmental GPA distribution over 4 years</p>
+                        </div>
+                        <button class="p-1 text-secondary hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+                        </button>
+                    </div>
+                    <!-- ECharts Container -->
+                    <div class="w-full h-[320px]" id="mainChart"></div>
+                </div>
+                <!-- Secondary Donut Chart -->
+                <div class="bento-card col-span-1 p-6 flex flex-col w-full min-w-0">
+                    <div class="mb-2">
+                        <h3 class="font-bold text-on-surface">Demographic Distribution</h3>
+                        <p class="text-xs text-secondary mt-1">Current term enrollment by major faculty</p>
+                    </div>
+                    <div class="w-full h-[280px]" id="donutChart"></div>
+                    <div class="mt-auto pt-4 border-t border-outline/20">
+                        <div class="flex justify-between items-center text-xs font-bold">
+                            <span class="text-secondary uppercase">Dominant Cohort:</span>
+                            <span class="text-primary">Natural Sciences (42%)</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Scatter Plot / Correlation -->
+                <div class="bento-card col-span-1 lg:col-span-3 p-6 w-full min-w-0">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
+                        <div>
+                            <h3 class="font-bold text-on-surface">Attendance vs. Performance Correlation</h3>
+                            <p class="text-xs text-secondary mt-1">Analyzing the impact of presence on final grades</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <span
+                                class="px-3 py-1 bg-surface-container rounded-full text-[10px] font-bold text-primary uppercase tracking-widest border border-outline/30">R²
+                                = 0.78</span>
+                        </div>
+                    </div>
+                    <div class="w-full h-[300px]" id="scatterChart"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <!-- Mobile Bottom Navigation Shell -->
+    <nav
+        class="lg:hidden fixed bottom-0 left-0 w-full z-50 h-[72px] bg-white/95 backdrop-blur-xl border-t border-outline/20 flex justify-around items-stretch px-2 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+        <button
+            class="flex-1 flex flex-col items-center justify-center gap-1 text-secondary hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[24px]" data-icon="space_dashboard">space_dashboard</span>
+            <span class="text-[9px] font-bold tracking-wider uppercase">Dash</span>
+        </button>
+        <button
+            class="flex-1 flex flex-col items-center justify-center gap-1 text-secondary hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[24px]" data-icon="rule_folder">rule_folder</span>
+            <span class="text-[9px] font-bold tracking-wider uppercase">Logs</span>
+        </button>
+        <!-- Active Tab Indicator Example -->
+        <div class="relative flex-1 flex flex-col items-center justify-center">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-1 bg-primary rounded-b-full"></div>
+            <button class="flex flex-col items-center justify-center gap-1 text-primary">
+                <span class="material-symbols-outlined text-[24px]" data-icon="query_stats">query_stats</span>
+                <span class="text-[9px] font-bold tracking-wider uppercase">Stats</span>
+            </button>
+        </div>
+        <button
+            class="flex-1 flex flex-col items-center justify-center gap-1 text-secondary hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[24px]" data-icon="file_present">file_present</span>
+            <span class="text-[9px] font-bold tracking-wider uppercase">Docs</span>
+        </button>
+    </nav>
+    <!-- Charts Initialization Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Ensure resize observer handles chart resizing
+            const resizeObserver = new ResizeObserver(() => {
+                if (mainEchart) mainEchart.resize();
+                if (donutEchart) donutEchart.resize();
+                if (scatterEchart) scatterEchart.resize();
+            });
+
+            const chartContainers = document.querySelectorAll('#mainChart, #donutChart, #scatterChart');
+            chartContainers.forEach(container => {
+                if (container) resizeObserver.observe(container.parentElement);
+            });
+
+            // 1. Main Line/Bar Combo Chart
+            const mainChartDom = document.getElementById('mainChart');
+            let mainEchart = null;
+            if (mainChartDom) {
+                mainEchart = echarts.init(mainChartDom);
+                mainEchart.setOption({
+                    color: ['#1B4D3E', '#4CAF50'],
+                    tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
+                    legend: { data: ['Science', 'Humanities'], bottom: '0', icon: 'circle', itemGap: 24, textStyle: { fontFamily: 'Inter', fontSize: 12 } },
+                    grid: { left: '3%', right: '4%', bottom: '15%', top: '10%', containLabel: true },
+                    xAxis: {
+                        type: 'category',
+                        data: ['2020', '2021', '2022', '2023', '2024'],
+                        axisLine: { lineStyle: { color: '#c0c9c3' } },
+                        axisLabel: { color: '#707974', fontFamily: 'Inter', fontWeight: 600 }
+                    },
+                    yAxis: {
+                        type: 'value', min: 2.5, max: 4.0,
+                        splitLine: { lineStyle: { color: 'rgba(192, 201, 195, 0.3)', type: 'dashed' } },
+                        axisLabel: { color: '#707974', fontFamily: 'Inter', fontWeight: 600 }
+                    },
+                    series: [
+                        { name: 'Science', type: 'line', smooth: true, symbolSize: 8, data: [3.1, 3.25, 3.4, 3.35, 3.55], lineStyle: { width: 3, shadowColor: 'rgba(27,77,62,0.3)', shadowBlur: 10 } },
+                        { name: 'Humanities', type: 'line', smooth: true, symbolSize: 8, data: [3.4, 3.45, 3.3, 3.6, 3.65], lineStyle: { width: 3 } }
+                    ]
+                });
+            }
+
+            // 2. Donut Chart
+            const donutChartDom = document.getElementById('donutChart');
+            let donutEchart = null;
+            if (donutChartDom) {
+                donutEchart = echarts.init(donutChartDom);
+                donutEchart.setOption({
+                    color: ['#1B4D3E', '#4CAF50', '#81C784', '#C8E6C9', '#E8F5E9'],
+                    tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+                    series: [
+                        {
+                            name: 'Faculty',
+                            type: 'pie',
+                            radius: ['50%', '80%'],
+                            avoidLabelOverlap: false,
+                            itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+                            label: { show: false, position: 'center' },
+                            emphasis: { label: { show: true, fontSize: 16, fontWeight: 'bold', fontFamily: 'Inter' } },
+                            labelLine: { show: false },
+                            data: [
+                                { value: 1048, name: 'Science' },
+                                { value: 735, name: 'Arts' },
+                                { value: 580, name: 'Engineering' },
+                                { value: 484, name: 'Business' },
+                                { value: 300, name: 'Law' }
+                            ]
+                        }
+                    ]
+                });
+            }
+
+            // 3. Scatter Chart
+            const scatterChartDom = document.getElementById('scatterChart');
+            let scatterEchart = null;
+            if (scatterChartDom) {
+                scatterEchart = echarts.init(scatterChartDom);
+
+                // Generate dummy correlation data
+                const generateData = () => {
+                    let data = [];
+                    for (let i = 0; i < 100; i++) {
+                        // Attendance % (60-100)
+                        let x = 60 + Math.random() * 40;
+                        // Base GPA + variance
+                        let basey = (x - 60) * 0.04 + 2.0;
+                        let y = basey + (Math.random() - 0.5) * 0.6;
+                        if (y > 4.0) y = 4.0;
+                        data.push([x.toFixed(1), y.toFixed(2)]);
+                    }
+                    return data;
+                };
+
+                scatterEchart.setOption({
+                    color: ['rgba(27, 77, 62, 0.6)'],
+                    grid: { left: '3%', right: '3%', bottom: '10%', top: '5%', containLabel: true },
+                    tooltip: {
+                        formatter: function (param) { return 'Att: ' + param.value[0] + '%<br/>GPA: ' + param.value[1]; }
+                    },
+                    xAxis: {
+                        type: 'value',
+                        name: 'Attendance (%)', nameLocation: 'middle', nameGap: 25,
+                        min: 50, max: 100,
+                        axisLine: { lineStyle: { color: '#c0c9c3' } },
+                        axisLabel: { color: '#707974', fontFamily: 'Inter' },
+                        splitLine: { show: false }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: 'Final GPA',
+                        min: 1.5, max: 4.0,
+                        splitLine: { lineStyle: { color: 'rgba(192, 201, 195, 0.3)', type: 'dashed' } },
+                        axisLabel: { color: '#707974', fontFamily: 'Inter' }
+                    },
+                    series: [{
+                        type: 'scatter',
+                        symbolSize: 8,
+                        data: generateData(),
+                        itemStyle: { shadowBlur: 5, shadowColor: 'rgba(27,77,62,0.2)', shadowOffsetY: 2 }
+                    }]
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
