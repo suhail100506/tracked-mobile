@@ -12,10 +12,12 @@ from .views import (
     UserCreateView,
     UserDetailView,
     UserListView,
+    PublicRegisterView,
 )
 
 urlpatterns = [
     # Authentication routes (custom JWT login/logout flows).
+    path("register/", PublicRegisterView.as_view(), name="user-register"),
     path("login/", LoginView.as_view(), name="user-login"),
     path("logout/", LogoutView.as_view(), name="user-logout"),
     # Admin user management routes.

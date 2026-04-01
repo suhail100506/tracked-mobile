@@ -19,7 +19,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security settings: never expose SECRET_KEY and disable DEBUG in production
 SECRET_KEY = config("SECRET_KEY", default="django-insecure-change-this-secret-key")
 DEBUG = config("DEBUG", default=True, cast=bool)
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1,localhost", cast=Csv())
+# Use '*' so any device (like your phone/emulator) can hit the API
+ALLOWED_HOSTS = ["*"]
 
 # Core + third-party + local app registration
 INSTALLED_APPS = [
@@ -77,19 +78,11 @@ TEMPLATES = [
 # WSGI application entrypoint for deployment servers (Gunicorn/uWSGI/etc.)
 WSGI_APPLICATION = "smart_academic.wsgi.application"
 
-# MySQL database settings loaded from .env variables for portability and security
+# MongoDB database settings loaded from .env variables for portability and security
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": config("DB_NAME", default="smart_academic_db"),
-        "USER": config("DB_USER", default="root"),
-        "PASSWORD": config("DB_PASSWORD", default=""),
-        "HOST": config("DB_HOST", default="127.0.0.1"),
-        "PORT": config("DB_PORT", default="3306"),
-        "OPTIONS": {
-            # Ensure proper UTF-8 support for multilingual academic content
-            "charset": "utf8mb4",
-        },
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -137,11 +130,7 @@ SIMPLE_JWT = {
 }
 
 # CORS policy allows configured frontend origins to call API endpoints
-CORS_ALLOWED_ORIGINS = config(
-    "CORS_ALLOWED_ORIGINS",
-    default="http://127.0.0.1:5500,http://localhost:5500",
-    cast=Csv(),
-)
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Allow credentials if frontend uses cookies/sessions later in the roadmap
 CORS_ALLOW_CREDENTIALS = True

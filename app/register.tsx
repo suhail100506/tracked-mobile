@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { router } from 'expo-router';
 import {
@@ -12,46 +11,53 @@ import {
     View,
 } from 'react-native';
 
-export default function Screen() {
-    const [identifier, setIdentifier] = useState('');
+export default function RegisterScreen() {
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(false);
-    const [remember, setRemember] = useState(true);
 
-    const handleLogin = async () => {
-        // 1. Input Validation (Security Requirement)
+    const handleRegister = async () => {
+        // 1. Input Validation
         setErrorMessage('');
-        if (!identifier.trim() || !password.trim()) {
-            setErrorMessage('Username/Email and password are required.');
+        if (!username.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
+            setErrorMessage('All fields are required.');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setErrorMessage('Passwords do not match.');
             return;
         }
 
         setLoading(true);
 
         try {
-            // 2. HTTP POST Request (Send data to backend)
-            // Note: Using your computer's local Wi-Fi IP so a physical phone can reach it
-            const response = await fetch('http://10.73.63.213:8000/api/users/login/', {
+            // Actual backend registration request hitting MongoDB endpoint
+            const response = await fetch('http://10.73.63.213:8000/api/users/register/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: identifier, password: password })
+                body: JSON.stringify({ username, email, password })
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                // ✅ Login Success: Store JWT (Token Management) and Redirect
-                // e.g. await SecureStore.setItemAsync('token', data.access);
-                router.replace('/(drawer)/(tabs)/dashboard');
+                // Success! Prompt user and navigate to login
+                alert(data.message || 'Registration Successful!');
+                router.replace('/');
             } else {
-                // ❌ Show error message from backend
-                setErrorMessage(data.detail || 'Invalid username or password.');
+                setErrorMessage(data.error || 'Registration failed.');
+                if (data.details) {
+                    console.log("DB Error:", data.details);
+                }
             }
+
         } catch (error) {
-            // Fallback for development if backend is not running yet
-            setErrorMessage('Network error. Check backend server.');
+            setErrorMessage('Registration failed. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -63,12 +69,12 @@ export default function Screen() {
                 <View style={styles.brandCard}>
                     <View style={styles.brandIcon} />
                     <Text style={styles.brandTitle}>Atheneum OS</Text>
-                    <Text style={styles.brandSub}>Next-generation academic management.</Text>
+                    <Text style={styles.brandSub}>Create your academic portal account.</Text>
                 </View>
 
                 <View style={styles.formCard}>
-                    <Text style={styles.title}>Sign into portal</Text>
-                    <Text style={styles.subtitle}>Enter your credentials to continue</Text>
+                    <Text style={styles.title}>Sign Up</Text>
+                    <Text style={styles.subtitle}>Enter your details to register</Text>
 
                     {errorMessage ? (
                         <View style={styles.errorBox}>
@@ -77,22 +83,32 @@ export default function Screen() {
                     ) : null}
 
                     <View style={styles.field}>
-                        <Text style={styles.label}>Username / Email</Text>
+                        <Text style={styles.label}>Username</Text>
                         <TextInput
-                            placeholder="e.g. student@univ.edu"
+                            placeholder="e.g. jdoe88"
                             placeholderTextColor="#707974"
                             autoCapitalize="none"
-                            value={identifier}
-                            onChangeText={setIdentifier}
+                            value={username}
+                            onChangeText={setUsername}
                             style={styles.input}
                         />
                     </View>
 
                     <View style={styles.field}>
-                        <View style={styles.rowBetween}>
-                            <Text style={styles.label}>Password</Text>
-                            <Text style={styles.link}>Forgot Password?</Text>
-                        </View>
+                        <Text style={styles.label}>Email Address</Text>
+                        <TextInput
+                            placeholder="e.g. student@univ.edu"
+                            placeholderTextColor="#707974"
+                            autoCapitalize="none"
+                            keyboardType="email-address"
+                            value={email}
+                            onChangeText={setEmail}
+                            style={styles.input}
+                        />
+                    </View>
+
+                    <View style={styles.field}>
+                        <Text style={styles.label}>Password</Text>
                         <View style={styles.passwordContainer}>
                             <TextInput
                                 placeholder="********"
@@ -108,32 +124,37 @@ export default function Screen() {
                         </View>
                     </View>
 
-                    <TouchableOpacity
-                        style={styles.checkRow}
-                        onPress={() => setRemember((value) => !value)}
-                        activeOpacity={0.8}
-                    >
-                        <View style={[styles.checkbox, remember && styles.checkboxChecked]} />
-                        <Text style={styles.checkText}>Keep me signed in</Text>
-                    </TouchableOpacity>
+                    <View style={styles.field}>
+                        <Text style={styles.label}>Confirm Password</Text>
+                        <View style={styles.passwordContainer}>
+                            <TextInput
+                                placeholder="********"
+                                placeholderTextColor="#707974"
+                                secureTextEntry={!showPassword}
+                                value={confirmPassword}
+                                onChangeText={setConfirmPassword}
+                                style={styles.passwordInput}
+                            />
+                        </View>
+                    </View>
 
                     <TouchableOpacity
                         style={styles.primaryButton}
                         activeOpacity={0.9}
-                        onPress={handleLogin}
+                        onPress={handleRegister}
                         disabled={loading}
                     >
                         {loading ? (
                             <ActivityIndicator color="#ffffff" />
                         ) : (
-                            <Text style={styles.primaryButtonText}>Login</Text>
+                            <Text style={styles.primaryButtonText}>Create Account</Text>
                         )}
                     </TouchableOpacity>
 
                     <View style={styles.signupRow}>
-                        <Text style={styles.helpText}>Don't have an account? </Text>
-                        <TouchableOpacity onPress={() => router.push('/register')}>
-                            <Text style={styles.link}>Sign Up</Text>
+                        <Text style={styles.helpText}>Already have an account? </Text>
+                        <TouchableOpacity onPress={() => router.replace('/')}>
+                            <Text style={styles.link}>Sign In</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -206,16 +227,6 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         color: '#003629',
     },
-    rowBetween: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    link: {
-        fontSize: 12,
-        fontWeight: '700',
-        color: '#1B4D3E',
-    },
     passwordContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -233,6 +244,18 @@ const styles = StyleSheet.create({
         color: '#1B4D3E',
         fontWeight: '600',
         paddingHorizontal: 8,
+    },
+    primaryButton: {
+        backgroundColor: '#1B4D3E',
+        borderRadius: 12,
+        padding: 16,
+        alignItems: 'center',
+        marginTop: 24,
+    },
+    primaryButtonText: {
+        color: '#ffffff',
+        fontSize: 16,
+        fontWeight: '700',
     },
     errorBox: {
         backgroundColor: '#fee2e2',
@@ -254,42 +277,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    checkRow: {
-        marginTop: 16,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 10,
-    },
-    checkbox: {
-        width: 18,
-        height: 18,
-        borderRadius: 6,
-        borderWidth: 1,
-        borderColor: '#c0c9c3',
-        backgroundColor: '#ffffff',
-    },
-    checkboxChecked: {
-        backgroundColor: '#1B4D3E',
-        borderColor: '#1B4D3E',
-    },
-    checkText: {
-        color: '#707974',
-        fontWeight: '600',
-    },
-    primaryButton: {
-        marginTop: 18,
-        backgroundColor: '#1B4D3E',
-        borderRadius: 14,
-        paddingVertical: 14,
-        alignItems: 'center',
-    },
-    primaryButtonText: {
-        color: '#ffffff',
-        fontWeight: '800',
-    },
     helpText: {
-        marginTop: 16,
         color: '#707974',
-        textAlign: 'center',
+        fontSize: 14,
+    },
+    link: {
+        fontSize: 14,
+        fontWeight: '700',
+        color: '#1B4D3E',
     },
 });

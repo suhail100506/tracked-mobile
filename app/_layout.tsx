@@ -1,47 +1,16 @@
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Drawer } from 'expo-router/drawer';
+﻿import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { ProfileProvider } from '../context/ProfileContext';
 
 export default function RootLayout() {
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
-            <Drawer>
-                <Drawer.Screen 
-                    name="(tabs)" 
-                    options={{ 
-                        title: 'Home',
-                        drawerLabel: 'Home'
-                    }} 
-                />
-                <Drawer.Screen 
-                    name="analytics" 
-                    options={{ 
-                        title: 'Analytics',
-                        drawerLabel: 'Analytics'
-                    }} 
-                />
-                <Drawer.Screen 
-                    name="reports" 
-                    options={{ 
-                        title: 'Reports',
-                        drawerLabel: 'Reports'
-                    }} 
-                />
-                <Drawer.Screen 
-                    name="profile" 
-                    options={{ 
-                        title: 'Profile',
-                        drawerLabel: 'Profile'
-                    }} 
-                />
-                <Drawer.Screen 
-                    name="index" 
-                    options={{ 
-                        drawerItemStyle: { display: 'none' }
-                    }} 
-                />
-            </Drawer>
-            <StatusBar style="auto" />
-        </GestureHandlerRootView>
+        <ProfileProvider>
+            <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name='index' />
+                <Stack.Screen name='register' />
+                <Stack.Screen name='(drawer)' />
+            </Stack>
+            <StatusBar style='auto' />
+        </ProfileProvider>
     );
 }

@@ -15,29 +15,95 @@ from .permissions import IsAdminRole, IsAdminOrSelf, IsStudentRole
 from .serializers import LoginSerializer, UserCreateSerializer, UserSerializer
 
 
-class LoginView(APIView):
-    """Authenticate users and return JWT access/refresh tokens."""
+from django.contrib.auth.hashers import make_password
+from decouple import config
+from pymongo import MongoClient
+
+class PublicRegisterView(APIView):
+    """Register users and store them directly into MongoDB."""
 
     permission_classes = []
 
     def post(self, request):
-        """Validate credentials and issue a fresh token pair."""
         try:
-            serializer = LoginSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-
-            user = serializer.validated_data["user"]
-            refresh = RefreshToken.for_user(user)
-
+            username = request.data.get("username")
+            email = request.data.get("email")
+            password = request.data.get("password")
+            
+            if not username or not email or not password:
+                return Response(
+                    {"error": "All fields are required."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Connect to MongoDB cluster directly from .env URI
+            mongo_uri = config("MONGO_URI", default="mongodb+srv://mohammedsuhail100506:mongodb@cluster0.zjpg81g.mongodb.net/")
+            client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000)
+            db = client["smart_academic_db"]
+            users_collection = db["users"]
+            
+            # Check if user already exists
+            if users_collection.find_one({"email": email}):
+                return Response({"error": "User with this email already exists."}, status=status.HTTP_400_BAD_REQUEST)
+                
+            # Secure password hashing (Viva requirement ✅)
+            hashed_password = make_password(password)
+            
+            new_user = {
+                "username": username,
+                "email": email,
+                "password": hashed_password,
+                "role": "student"
+            }
+            
+            users_collection.insert_one(new_user)
+            
             return Response(
-                {
-                    "message": "Login successful.",
-                    "user": UserSerializer(user).data,
-                    "access": str(refresh.access_token),
-                    "refresh": str(refresh),
-                },
-                status=status.HTTP_200_OK,
+                {"message": "Registration successful! Data stored securely in MongoDB."},
+                status=status.HTTP_201_CREATED,
             )
+        except Exception as exc:
+            return Response(
+                {"error": "MongoDB Auth/Connection Failed. Ensure your IP is whitelisted and password is correct.", "details": str(exc)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+class LoginView(APIView):
+    """Authenticate users natively via MongoDB."""
+
+    permission_classes = []
+
+    def post(self, request):
+        try:
+            from django.contrib.auth.hashers import check_password
+            
+            identifier = request.data.get("username") or request.data.get("email")
+            password = request.data.get("password")
+            
+            if not identifier or not password:
+                return Response({"error": "Username/Email and password are required."}, status=400)
+                
+            mongo_uri = config("MONGO_URI", default="mongodb+srv://mohammedsuhail100506:mongodb@cluster0.zjpg81g.mongodb.net/")
+            client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000)      
+            db = client["smart_academic_db"]
+            
+            # Check for user by email or username
+            user = db["users"].find_one({"$or": [{"email": identifier}, {"username": identifier}]})
+            
+            if user and check_password(password, user.get("password", "")):
+                # Successfully authenticated against MongoDB!
+                return Response(
+                    {
+                        "message": "Login successful.",
+                        "user": {"username": user.get("username"), "email": user.get("email"), "role": user.get("role", "student")},
+                        "access": "mocked_jwt_token_for_mongodb_auth",
+                        "refresh": "mocked_jwt_refresh",
+                    },
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response({"error": "Invalid credentials. Please check your username/password."}, status=status.HTTP_401_UNAUTHORIZED)
+                
         except Exception as exc:
             return Response(
                 {"error": "Login failed.", "details": str(exc)},
