@@ -131,8 +131,8 @@ export default function Screen() {
                         </TouchableOpacity>
                     </View>
 
-                    <TouchableOpacity 
-                        style={{ marginTop: 16, alignItems: 'center' }} 
+                    <TouchableOpacity
+                        style={{ marginTop: 16, alignItems: 'center' }}
                         onPress={() => router.replace('/advisor-dashboard')}
                     >
                         <Text style={[styles.link, { color: '#707974', textDecorationLine: 'underline' }]}>
