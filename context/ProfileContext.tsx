@@ -11,8 +11,8 @@ export type ProfileData = {
 };
 
 const defaultProfile: ProfileData = {
-    fullName: 'Mohammed Ali',
-    rollNo: '21CS045',
+    fullName: 'Mohammed Suhail M',
+    rollNo: '24CS139',
     department: 'Computer Science & Engineering',
     cgpa: '8.7',
     attendance: '86',

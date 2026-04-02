@@ -37,7 +37,7 @@ export default function RegisterScreen() {
 
         try {
             // Actual backend registration request hitting MongoDB endpoint
-            const response = await fetch('http://10.73.63.213:8000/api/users/register/', {
+            const response = await fetch('http://172.16.26.76:8000/api/users/register/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, email, password })

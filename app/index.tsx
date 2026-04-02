@@ -33,7 +33,7 @@ export default function Screen() {
         try {
             // 2. HTTP POST Request (Send data to backend)
             // Note: Using your computer's local Wi-Fi IP so a physical phone can reach it
-            const response = await fetch('http://10.73.63.213:8000/api/users/login/', {
+            const response = await fetch('http://172.16.26.76:8000/api/users/login/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: identifier, password: password })
@@ -60,12 +60,6 @@ export default function Screen() {
     return (
         <SafeAreaView style={styles.root}>
             <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-                <View style={styles.brandCard}>
-                    <View style={styles.brandIcon} />
-                    <Text style={styles.brandTitle}>Atheneum OS</Text>
-                    <Text style={styles.brandSub}>Next-generation academic management.</Text>
-                </View>
-
                 <View style={styles.formCard}>
                     <Text style={styles.title}>Sign into portal</Text>
                     <Text style={styles.subtitle}>Enter your credentials to continue</Text>
@@ -136,6 +130,15 @@ export default function Screen() {
                             <Text style={styles.link}>Sign Up</Text>
                         </TouchableOpacity>
                     </View>
+
+                    <TouchableOpacity 
+                        style={{ marginTop: 16, alignItems: 'center' }} 
+                        onPress={() => router.replace('/advisor-dashboard')}
+                    >
+                        <Text style={[styles.link, { color: '#707974', textDecorationLine: 'underline' }]}>
+                            Login as Academic Advisor
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -148,8 +151,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#f8faf9',
     },
     container: {
+        flexGrow: 1,
+        justifyContent: 'center',
         padding: 20,
-        gap: 20,
     },
     brandCard: {
         backgroundColor: '#1B4D3E',
@@ -249,7 +253,8 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
     signupRow: {
-        marginTop: 20,
+        marginTop: 36,
+        marginBottom: 8,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -288,7 +293,6 @@ const styles = StyleSheet.create({
         fontWeight: '800',
     },
     helpText: {
-        marginTop: 16,
         color: '#707974',
         textAlign: 'center',
     },
