@@ -37,7 +37,7 @@ export default function RegisterScreen() {
 
         try {
             // Actual backend registration request hitting MongoDB endpoint
-            const response = await fetch('http://172.16.26.76:8000/api/users/register/', {
+            const response = await fetch('http://127.0.0.1:8000/api/users/register/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, email, password })
@@ -66,12 +66,6 @@ export default function RegisterScreen() {
     return (
         <SafeAreaView style={styles.root}>
             <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-                <View style={styles.brandCard}>
-                    <View style={styles.brandIcon} />
-                    <Text style={styles.brandTitle}>Atheneum OS</Text>
-                    <Text style={styles.brandSub}>Create your academic portal account.</Text>
-                </View>
-
                 <View style={styles.formCard}>
                     <Text style={styles.title}>Sign Up</Text>
                     <Text style={styles.subtitle}>Enter your details to register</Text>

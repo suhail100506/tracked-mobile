@@ -7,7 +7,7 @@ export default function ProfileScreen() {
     const [loading, setLoading] = useState(false);
 
     // Form State mapped to Global State
-    const { profile, setProfile } = useProfile();
+    const { profile, setProfile, token } = useProfile();
 
     const handleChange = (field: string, value: string) => {
         setProfile(prev => ({ ...prev, [field]: value }));
@@ -16,8 +16,19 @@ export default function ProfileScreen() {
     const handleSave = async () => {
         setLoading(true);
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            Alert.alert("Success", "Academic Profile Updated Successfully!");
+            const res = await fetch('http://127.0.0.1:8000/api/users/profile/', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(profile)
+            });
+            if (res.ok) {
+                Alert.alert("Success", "Academic Profile Updated Successfully!");
+            } else {
+                Alert.alert("Error", "Failed to update profile on backend");
+            }
         } catch (error) {
             Alert.alert("Error", "Could not update profile");
         } finally {

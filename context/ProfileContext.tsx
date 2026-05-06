@@ -11,27 +11,32 @@ export type ProfileData = {
 };
 
 const defaultProfile: ProfileData = {
-    fullName: 'Mohammed Suhail M',
-    rollNo: '24CS139',
-    department: 'Computer Science & Engineering',
-    cgpa: '8.7',
-    attendance: '86',
-    marks: '412/500',
-    activities: '• Coding Club President\n• Hackathon Winner 2023\n• ML Research Assistant'
+    fullName: '',
+    rollNo: '',
+    department: '',
+    cgpa: '',
+    attendance: '',
+    marks: '',
+    activities: ''
 };
 
 const ProfileContext = createContext<{
     profile: ProfileData;
     setProfile: React.Dispatch<React.SetStateAction<ProfileData>>;
+    token: string | null;
+    setToken: React.Dispatch<React.SetStateAction<string | null>>;
 }>({
     profile: defaultProfile,
     setProfile: () => { },
+    token: null,
+    setToken: () => { },
 });
 
 export const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
     const [profile, setProfile] = useState<ProfileData>(defaultProfile);
+    const [token, setToken] = useState<string | null>(null);
     return (
-        <ProfileContext.Provider value={{ profile, setProfile }}>
+        <ProfileContext.Provider value={{ profile, setProfile, token, setToken }}>
             {children}
         </ProfileContext.Provider>
     );

@@ -1,6 +1,7 @@
 
-import { useState } from 'react';
-import { router } from 'expo-router';
+import { useState, useEffect } from 'react';
+import { router, Redirect } from 'expo-router';
+import { useProfile } from '../context/ProfileContext';
 import {
     ActivityIndicator,
     SafeAreaView,
@@ -13,6 +14,7 @@ import {
 } from 'react-native';
 
 export default function Screen() {
+    const { setToken, setProfile } = useProfile();
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -32,8 +34,7 @@ export default function Screen() {
 
         try {
             // 2. HTTP POST Request (Send data to backend)
-            // Note: Using your computer's local Wi-Fi IP so a physical phone can reach it
-            const response = await fetch('http://172.16.26.76:8000/api/users/login/', {
+            const response = await fetch('http://127.0.0.1:8000/api/users/login/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: identifier, password: password })
@@ -42,16 +43,27 @@ export default function Screen() {
             const data = await response.json();
 
             if (response.ok) {
-                // ✅ Login Success: Store JWT (Token Management) and Redirect
-                // e.g. await SecureStore.setItemAsync('token', data.access);
+                // Store tokens if needed here
+                setToken(data.access);
+                if (data.user?.profile) {
+                    setProfile({
+                        fullName: data.user.profile.fullName || '',
+                        rollNo: data.user.profile.rollNo || '',
+                        department: data.user.profile.department || '',
+                        cgpa: data.user.profile.cgpa || '',
+                        attendance: data.user.profile.attendance || '',
+                        marks: data.user.profile.marks || '',
+                        activities: data.user.profile.activities || '',
+                    });
+                } else {
+                    setProfile({ fullName: '', rollNo: '', department: '', cgpa: '', attendance: '', marks: '', activities: '' });
+                }
                 router.replace('/(drawer)/(tabs)/dashboard');
             } else {
-                // ❌ Show error message from backend
-                setErrorMessage(data.detail || 'Invalid username or password.');
+                setErrorMessage(data.detail || data.error || 'Invalid username or password.');
             }
         } catch (error) {
-            // Fallback for development if backend is not running yet
-            setErrorMessage('Network error. Check backend server.');
+            setErrorMessage('Network error. Is the backend server running?');
         } finally {
             setLoading(false);
         }
