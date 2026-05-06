@@ -19,8 +19,8 @@ app.use(express.json());
 const MONGO_URI = "mongodb+srv://mohammedsuhail100506:mongo10@cluster0.zjpg81g.mongodb.net/smart_academic_db";
 
 mongoose.connect(MONGO_URI)
-  .then(() => console.log('Connected to MongoDB successfully!'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+    .then(() => console.log('Connected to MongoDB successfully!'))
+    .catch((err) => console.error('MongoDB connection error:', err));
 
 // Main entry point for migration
 app.get('/api/health', (req, res) => {
@@ -30,7 +30,7 @@ app.get('/api/health', (req, res) => {
 app.post('/api/users/register/', async (req, res) => {
     try {
         const { username, email, password } = req.body;
-        
+
         let user = await User.findOne({ email });
         if (user) return res.status(400).json({ message: 'User already exists' });
 
@@ -50,7 +50,7 @@ app.post('/api/users/register/', async (req, res) => {
 app.post('/api/users/login/', async (req, res) => {
     try {
         const { username, password } = req.body;
-        
+
         const user = await User.findOne({ username });
         if (!user) return res.status(400).json({ message: 'Invalid credentials' });
 
